@@ -16,6 +16,8 @@
 # production
 /build
 
+notas.txt
+
 # misc
 .DS_Store
 *.pem
