@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { ChangeEvent, FC, useRef, useState } from "react";
-import axios from "axios";
+import Image from 'next/image';
+import { ChangeEvent, FC, useRef, useState } from 'react';
+import axios from 'axios';
 
-import { Icons } from "@/components/icons";
-import { CloudinaryResponse } from "@/interfaces/cloudinary-response";
+import { Icons } from '@/components/icons';
+import { CloudinaryResponse } from '@/interfaces/cloudinary-response';
 
 
 interface FileUploadProps {
@@ -39,8 +39,6 @@ export const FileUpload: FC<FileUploadProps> = ({ onChange, imageValue, isSubmit
       
       onChange(data.secure_url);
       setImgId(data.public_id);
-    
-      console.log(data);
     
     } catch (error) {
       console.log(error)

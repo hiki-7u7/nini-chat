@@ -11,7 +11,13 @@ import {
   Camera,
   Trash,
   Loader2,
-} from "lucide-react";
+  Video,
+  MoreVertical,
+  Pencil,
+  Copy,
+  RefreshCcw,
+  Check,
+} from 'lucide-react';
 
 export const Icons = {
   UserPlus,
@@ -25,7 +31,13 @@ export const Icons = {
   X,
   Camera,
   Trash,
-  Loader2
+  Loader2,
+  Video,
+  MoreVertical,
+  Pencil,
+  Copy,
+  RefreshCcw,
+  Check
 };
 
 export type Icon = keyof typeof Icons;

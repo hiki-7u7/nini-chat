@@ -81,7 +81,7 @@ export const CreateGroupModal = ({}) => {
         className="
         bg-[#212121]
         border-[1px]
-        border-[#808080]
+        border-[hsl(0,0%,50%)]
         rounded-[5px]
         w-[400px]
         p-[15px]

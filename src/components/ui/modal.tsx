@@ -17,7 +17,7 @@ export const Modal: FC<ModalProps> = ({ children, open, onOpenChange }) => {
     <div
       onClick={onOpenChange}
       className={cn(`
-          bg-[#0000]/70
+          bg-[#0000]/60
           z-50
           fixed
           flex

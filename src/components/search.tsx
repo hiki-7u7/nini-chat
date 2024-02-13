@@ -1,7 +1,7 @@
 "use client";
 
-import { FC } from "react";
-import { Icons } from "@/components/icons";
+import { FC } from 'react';
+import { Icons } from '@/components/icons';
 
 interface SearchProps {
   page: string,
@@ -11,7 +11,7 @@ interface SearchProps {
 
 export const Search: FC<SearchProps> = ({ page, onChange, value }) => {
   return (
-    <div className="h-[70px] border-b-2 border-[#212121] flex items-center">
+    <div className="h-[70px] bg-[#292929] border-b-2 border-[#212121] flex items-center">
     <div
       className="
         w-full
@@ -43,17 +43,34 @@ export const Search: FC<SearchProps> = ({ page, onChange, value }) => {
           pr-[36px]
         "
       />
-      <Icons.Search
-        className="
-        text-[#808080]
-          absolute 
-          right-[10px]
-          inset-y-0
-          m-auto
-          w-[20px]
-          h-[20px]
-        "
-      />
+      {!value.length
+        ? (<Icons.Search
+          className="
+          text-[#808080]
+            absolute 
+            right-[10px]
+            inset-y-0
+            m-auto
+            w-[20px]
+            h-[20px]
+          "
+        />)
+        : (<Icons.X
+          onClick={() => onChange('')}
+          className="
+          text-[#808080]
+            absolute 
+            right-[10px]
+            inset-y-0
+            m-auto
+            w-[20px]
+            h-[20px]
+            cursor-pointer
+            hover:text-white
+          "
+        />)
+      }
+      
     </div>
   </div>
   )

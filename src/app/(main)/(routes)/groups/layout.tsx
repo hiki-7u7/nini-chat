@@ -1,10 +1,9 @@
-import { FC, ReactNode } from "react";
-import { redirectToSignIn } from "@clerk/nextjs";
+import { FC, ReactNode } from 'react';
+import { redirectToSignIn } from '@clerk/nextjs';
 
-
-import { Sidebar } from "@/components/side-bar";
-import { currentProfile } from "@/lib/current-profile";
-import { db } from "@/lib/db";
+import { GroupsSidebar } from '@/components/groups/groups-sidebar';
+import { currentProfile } from '@/lib/current-profile';
+import { db } from '@/lib/db';
 
 
 interface GroupsLayoutProps {
@@ -34,7 +33,7 @@ const GroupsLayout: FC<GroupsLayoutProps> = async ({ children }) => {
 
   return (
     <>
-      <Sidebar page="groups" chats={groups}/>
+      <GroupsSidebar page="groups" groups={groups}/>
       <div className="md:pl-[250px] h-full">
         {children}
       </div>

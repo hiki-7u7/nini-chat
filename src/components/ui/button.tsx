@@ -38,9 +38,16 @@ export const Button: FC<ButtonProps> = ({
       )}
       disabled={isLoading}
       {...props}
-    >
-      {label}
-      {isLoading ? <Loader2 className="h-[20px] w-[20px] animate-spin"/>  : icon}
+    > 
+      {icon
+        ? (<>
+          {label}
+          {isLoading ? <Loader2 className="h-[20px] w-[20px] animate-spin"/>  : icon}
+        </>)
+        : (<>
+          {isLoading ? <Loader2 className="h-[20px] w-[20px] animate-spin"/>  : label}
+        </>)
+      }
     </button>
   )
 }

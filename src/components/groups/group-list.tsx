@@ -2,14 +2,18 @@
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { FC } from "react";
-import { Group, Message } from "@prisma/client";
+import { FC, useEffect, useState } from "react";
 
-interface ChatListProps {
-  chats: (Group & { messages: Message[] })[]
+import { GroupWithMessages } from "@/types/group";
+import { Message } from "@prisma/client";
+
+interface GroupListProps {
+  groups: GroupWithMessages[]
 }
 
-export const ChatList: FC<ChatListProps> = ({ chats }) => {
+export const GroupList: FC<GroupListProps> = ({ groups }) => {
+
+  const [unseenMessages, setUnseenMessages] = useState<Message[]>([]);
 
   const router = useRouter();
 
@@ -27,10 +31,10 @@ export const ChatList: FC<ChatListProps> = ({ chats }) => {
         gap-y-[5px]
       "
     >
-      {chats.map((chat) => (
+      {groups.map((group) => (
         <div
-          onClick={() => handleNavigate(chat.id)}
-          key={chat.id}
+          onClick={() => handleNavigate(group.id)}
+          key={group.id}
           className="
           hover:bg-[#333333]
             cursor-pointer
@@ -53,13 +57,18 @@ export const ChatList: FC<ChatListProps> = ({ chats }) => {
               "
             >
               <Image
-                src={chat.imageUrl}
+                src={group.imageUrl}
                 fill
                 alt="group image"
                 className="rounded-full"
               />
             </div>
-            <p className="text-white text-sm font-medium">{chat.name}</p>
+            <p className="text-white text-sm font-medium">
+              {group.name.length > 10
+                ? group.name.substring(0,10) + '...'
+                : group.name
+              }
+            </p>
           </div>
 
           <div
