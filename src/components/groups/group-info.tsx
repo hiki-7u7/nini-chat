@@ -6,6 +6,7 @@ import { FC, useState } from "react";
 import { Icons } from '../icons';
 import { GroupOverview } from "./group-overview";
 import { MemberWithProfile } from "@/types/group";
+import { GroupMembers } from "./group-members";
 
 interface GroupInfoProps {
   onClose: () => void,
@@ -42,11 +43,9 @@ export const GroupInfo: FC<GroupInfoProps> = ({ onClose, group, members, isAdmin
     switch (action) {
       case 'overview':
         setCurrentOption(action)
-        console.log(action)
         break;
       case 'members':
         setCurrentOption(action)
-        console.log(action)
       default:
         break;
     }
@@ -81,7 +80,7 @@ export const GroupInfo: FC<GroupInfoProps> = ({ onClose, group, members, isAdmin
                 flex 
                 items-center 
                 px-[10px] 
-                border-b-2 
+                border-b-[1px]
                 border-[#808080]`,
                 currentOption === option.actionType ? "bg-[#333333]" : null
               )}>
@@ -92,28 +91,26 @@ export const GroupInfo: FC<GroupInfoProps> = ({ onClose, group, members, isAdmin
 
         </div>
         
-        <Icons.X
-          onClick={() => onClose()}
-          className="
-            cursor-pointer
-            text-[#808080]
-            hover:text-white
-            absolute 
-            top-[10px] 
-            right-[10px]
-            z-20"
-        />
+        {currentOption === 'overview' && (
+          <Icons.X
+            onClick={() => onClose()}
+            className="
+              cursor-pointer
+              text-[#808080]
+              hover:text-white
+              absolute 
+              top-[10px] 
+              right-[10px]
+              z-20"
+          />
+        )}
 
         <div className="relative flex-1">
           {currentOption === 'overview' && (
             <GroupOverview group={group} isAdmin={isAdmin}/>
           )}
           {currentOption === 'members' && (
-            <>
-              {members.map(member => (
-                <p key={member.id} className="text-white">{member.profile.name}</p>
-              ))}
-            </>
+            <GroupMembers members={members} isAdmin={isAdmin}/>
           )}
         </div>
 

@@ -17,6 +17,10 @@ import {
   Copy,
   RefreshCcw,
   Check,
+  Crown,
+  Plus,
+  SendHorizonal,
+  ServerCrash,
 } from 'lucide-react';
 
 export const Icons = {
@@ -37,7 +41,11 @@ export const Icons = {
   Pencil,
   Copy,
   RefreshCcw,
-  Check
+  Check,
+  Crown,
+  Plus,
+  SendHorizonal,
+  ServerCrash,
 };
 
 export type Icon = keyof typeof Icons;

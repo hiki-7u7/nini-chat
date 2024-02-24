@@ -25,11 +25,11 @@ export const GroupOverview: FC<GroupOverviewProps> = ({ group, isAdmin }) => {
   const [shouldSubmit, setShouldSubmit] = useState(true);
   const [isCopied, setIsCopied] = useState(false);
   const [values, setValues] = useState({
-    imageUrl: group.imageUrl,
-    name: group.name,
-    description: group.description,
+    imageUrl: '',
+    name: '',
+    description: '',
   });
-  const [inviteCode, setInviteCode] = useState(group.inviteCode);
+  const [inviteCode, setInviteCode] = useState('');
   const origin = useOrigin();
   const { onClose } = useModal();
   const router = useRouter();
@@ -37,18 +37,27 @@ export const GroupOverview: FC<GroupOverviewProps> = ({ group, isAdmin }) => {
   const inviteUrl = `${origin}/invite/${inviteCode}`;
 
   useEffect(() => {
+    setValues({
+      imageUrl: group?.imageUrl,
+      name: group?.name,
+      description: group?.description,
+    })
+    setInviteCode(group?.inviteCode)
+  }, [group])
+
+  useEffect(() => {
 
     const initialValues = {
-      imageUrl: group.imageUrl,
-      name: group.name,
-      description: group.description,
+      imageUrl: group?.imageUrl,
+      name: group?.name,
+      description: group?.description,
     }
 
     // @ts-ignore
-    const hasChanged = Object.keys(values).some( key => (values[key] as string).trim() !== initialValues[key] );
+    const hasChanged = Object.keys(values).some( key => (values[key] as string)?.trim() !== initialValues[key] );
     
     // @ts-ignore
-    const validSubmit = Object.keys(values).every(key => (values[key] as string).length > 0 );
+    const validSubmit = Object.keys(values).every(key => (values[key] as string)?.length > 0 );
     
     setShouldSubmit(validSubmit);
     setShouldEdit(hasChanged);
@@ -75,7 +84,7 @@ export const GroupOverview: FC<GroupOverviewProps> = ({ group, isAdmin }) => {
     if(!isAdmin) return;
     if(!shouldSubmit) return;
 
-    const url = `/api/groups/${group.id}`
+    const url = `/api/groups/${group?.id}`
 
     setIsLoading(true);
 
@@ -203,7 +212,7 @@ export const GroupOverview: FC<GroupOverviewProps> = ({ group, isAdmin }) => {
           <p className="text-[#808080] text-xs font-semibold">Creado</p>
           <div className="bg-[#404040] px-[10px] rounded-[5px] h-[40px] flex items-center">
             <p className="text-white text-sm">
-              {group.createdAt.toDateString()}
+              {group?.createdAt.toDateString()}
             </p>
           </div>
         </div>

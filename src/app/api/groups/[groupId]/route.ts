@@ -61,3 +61,45 @@ export async function PATCH (
   }
 
 }
+
+export async function DELETE (
+  req: Request,
+  { params } : { params: { groupId: string } }  
+) {
+  
+  const profile = await currentProfile();
+
+  if(!profile) {
+    return new NextResponse('Unauthorized', { status: 401 });
+  }
+
+  if(!params.groupId){
+    return new NextResponse('Group ID missing', { status: 400 });
+  }
+
+  try {
+ 
+    const group = await db.group.delete({
+      where: {
+        id: params.groupId,
+        profileId: profile.id
+      }
+    });
+
+    if(!group) {
+      return new NextResponse('Group not found', { status: 404 });
+    }
+
+    const imageUrlSegments = group?.imageUrl.split('/');
+    const imageId = imageUrlSegments![imageUrlSegments!?.length - 1].split('.')[0];
+
+    await deleteFile(`nini-chat/${imageId}`);    
+
+    return new NextResponse('ok', { status: 200 });
+  } catch (error) {
+    console.log('',error);
+    return new NextResponse('Internal server error', { status: 500 });
+  }
+
+}
+

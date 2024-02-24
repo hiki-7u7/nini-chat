@@ -48,7 +48,7 @@ const InviteCodePage: FC<InviteCodeProps> = async ({ params }) => {
   });
 
   if(isAlreadyMember){
-    return redirect('/')
+    return redirect(`/groups/${isAlreadyMember.id}`)
   }
 
   return (

@@ -71,7 +71,7 @@ export const GroupsSidebar: FC<GroupsSidebarProps> = ({ page, groups }) => {
               avatarBox: "h-[48px] w-[48px]",
             },
           }}
-          afterSignOutUrl="/login"
+          afterSignOutUrl="/"
         />
         <div className="p-3 hover:bg-[#333333] rounded-full cursor-pointer">
           <Icons.Settings className="text-white h-[22px] w-[22px]" />

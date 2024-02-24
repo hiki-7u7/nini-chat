@@ -2,7 +2,7 @@ import { MemberWithProfile } from "@/types/group";
 import { Group } from "@prisma/client";
 import { create } from "zustand";
 
-export type ModalType = 'createGroup' | 'infoGroup';
+export type ModalType = 'createGroup' | 'infoGroup' | 'leaveGroup' | 'deleteGroup';
 
 type ModalData = {
   group?: Group,

@@ -7,3 +7,9 @@ export type GroupWithMessages = (Group & {
 export type MemberWithProfile = (Member & {
   profile: Profile
 })
+
+export type MessageWithMemberWithProfile = (Message & {
+  member: Member & {
+    profile: Profile
+  }
+})

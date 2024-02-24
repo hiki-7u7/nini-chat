@@ -37,6 +37,8 @@ export const GroupImage: FC<GroupImageProps> = ({ editable, src, onChange }) => 
 
   }
 
+  if(!src) return null
+
   return (
     <div className="relative h-[125px] w-[125px] rounded-full mt-[20px]">
     <Image 

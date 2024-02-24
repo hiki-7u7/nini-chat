@@ -27,7 +27,12 @@ export const GroupChatHeader: FC<GroupChatHeaderProps> = ({ group, members, curr
         onOpen('infoGroup', { group, members, currentMember })
         break;
       case 'leaveGroup':
-        console.log('leaveGroup')
+        setShowOptions(false);
+        onOpen('leaveGroup', { group })
+        break;
+      case 'deleteGroup':
+        setShowOptions(false);
+        onOpen('deleteGroup', { group })
         break;
       default:
         break;
@@ -76,7 +81,7 @@ export const GroupChatHeader: FC<GroupChatHeaderProps> = ({ group, members, curr
         border-[#212121]
         rounded-b-[5px]
         absolute
-        z-0
+        z-10
         overflow-hidden
         transition-all`,
         showOptions ? "-bottom-[80px] right-[15px]" : "bottom-0 right-[15px]"
@@ -102,7 +107,7 @@ export const GroupChatHeader: FC<GroupChatHeaderProps> = ({ group, members, curr
 
         { currentMember.role === 'ADMIN' && (
           <div 
-            onClick={() => handleAction('DeleteGroup')} 
+            onClick={() => handleAction('deleteGroup')} 
             className="hover:bg-[#333333] cursor-pointer h-[40px] flex items-center px-[10px] border-b-2 border-[#212121]"
           >
             <p className="text-white text-[13px] font-medium">Eliminar grupo</p>

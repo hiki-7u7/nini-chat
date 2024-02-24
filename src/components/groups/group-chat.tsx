@@ -1,9 +1,12 @@
 "use client";
 
-import { Group } from "@prisma/client";
 import { FC } from "react";
-import { GroupChatHeader } from "./group-chat-header";
+
+import { Group } from "@prisma/client";
 import { MemberWithProfile } from "@/types/group";
+import { GroupChatHeader } from "./group-chat-header";
+import { GroupChatInput } from "./group-chat-input";
+import { GroupMessages } from "./group-messages";
 
 interface GroupChatProps {
   group: Group,
@@ -14,10 +17,12 @@ interface GroupChatProps {
 export const GroupChat: FC<GroupChatProps> = ({ group, members, currentMember }) => {
 
   return (
-    <div className="h-full relative">
-      <div className="h-[70px] relative">
+    <div className="h-full relative flex flex-col">
+      <div className="relative">
         <GroupChatHeader group={group} members={members} currentMember={currentMember}/>
       </div>
+      <GroupMessages groupId={group.id} currentMember={currentMember}/>
+      <GroupChatInput group={group} />
     </div>
   )
 }

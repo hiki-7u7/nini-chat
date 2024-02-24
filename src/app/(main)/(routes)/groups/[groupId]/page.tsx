@@ -30,7 +30,7 @@ const GroupIdPage: FC<GroupIdProps> = async ({ params }) => {
   });
 
   if(!group) {
-    return redirect('/');
+    return redirect('/groups');
   }
 
   const members = await db.member.findMany({
@@ -45,7 +45,7 @@ const GroupIdPage: FC<GroupIdProps> = async ({ params }) => {
   const currentMember = members.find((member) => member.profileId === profile.id);
 
   return (
-    <div className="bg-[#2B2B2B] h-full">
+    <div className="h-full">
       <GroupChat group={group} members={members} currentMember={currentMember!}/>
     </div>
   );

@@ -29,7 +29,7 @@ export const JoinGroup: FC<JoinGroupProps> = ({ group, inviteCode }) => {
         inviteCode
       });
       
-      router.push('/')
+      router.push(`/groups/${group.id}`)
     } catch (error) {
       console.log(error);
     }finally {
