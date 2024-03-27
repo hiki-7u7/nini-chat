@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import axios from "axios";
 
 import { Icons } from "../icons";
@@ -17,7 +17,7 @@ interface GroupMembersProps {
 
 export const GroupMembers: FC<GroupMembersProps> = ({ members, isAdmin }) => {
   
-  const [isLoding, setIsloading] = useState(false);
+  const [loadingId, setLoadingId] = useState("");
   const [searchValue, setSearchValue] = useState('');
   const router = useRouter();
   const { onOpen, data } = useModal();
@@ -29,7 +29,7 @@ export const GroupMembers: FC<GroupMembersProps> = ({ members, isAdmin }) => {
   })
 
   const handleDelete = async (memberId: string) => {
-    setIsloading(true);
+    setLoadingId(memberId);
 
     const url = `/api/members/${memberId}?groupId=${data.group?.id}`;
 
@@ -41,7 +41,7 @@ export const GroupMembers: FC<GroupMembersProps> = ({ members, isAdmin }) => {
     } catch (error) {
       console.log(error);
     } finally {
-      setIsloading(false);
+      setLoadingId("");
     }
   }
 
@@ -131,7 +131,11 @@ export const GroupMembers: FC<GroupMembersProps> = ({ members, isAdmin }) => {
                     text-red-500
                     font-semibold"
                 >
-                  {isLoding
+                  {/* {isLoding
+                    ? <Icons.Loader2 className="animate-spin"/>
+                    : "Expulsar"
+                  } */}
+                  {(loadingId === member.id)
                     ? <Icons.Loader2 className="animate-spin"/>
                     : "Expulsar"
                   }

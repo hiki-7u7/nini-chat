@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "react-hot-toast";
+
 import { ModalProvider } from "@/components/providers/modal-provider";
 import { QueryProvider } from "@/components/providers/query-provider";
+import { SocketProvider } from "@/components/providers/socket-provider";
+
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,10 +28,13 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className={inter.className}>
-          <ModalProvider />
-          <QueryProvider>
-            {children}
-          </QueryProvider>
+          <SocketProvider>
+            <Toaster position="top-center" reverseOrder={true}/>
+            <ModalProvider />
+            <QueryProvider>
+              {children}
+            </QueryProvider>
+          </SocketProvider>
         </body>
       </html>
     </ClerkProvider>

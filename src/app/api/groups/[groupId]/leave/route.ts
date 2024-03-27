@@ -1,5 +1,7 @@
 import { currentProfile } from '@/lib/current-profile';
 import { db } from '@/lib/db';
+import { pusherServer } from '@/lib/pusher';
+import { toPusherKey } from '@/lib/utils';
 import { NextResponse } from 'next/server';
 
 export async function PATCH (
@@ -19,7 +21,7 @@ export async function PATCH (
 
   try {
     
-    await db.group.update({
+    const group = await db.group.update({
       where: {
         id: params.groupId,
         profileId: {
@@ -39,6 +41,12 @@ export async function PATCH (
         }
       }
     })
+
+    pusherServer.trigger(
+      toPusherKey(`group:${group.id}:member_left_the_group`), 
+      'member_left_the_group',
+      { profileId: profile.id },
+    )
 
     return new NextResponse('ok', { status: 200 });
   } catch (error) {

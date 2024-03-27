@@ -2,8 +2,12 @@ import { NextResponse } from 'next/server';
 import { currentProfile } from '@/lib/current-profile';
 import { db } from '@/lib/db';
 import { Message } from '@prisma/client';
+import { uploadFile } from '@/helpers/upload-file';
+import { CloudinaryResponse } from '@/interfaces/cloudinary-response';
+import { pusherServer } from '@/lib/pusher';
+import { toPusherKey } from '@/lib/utils';
 
-const MESSAGES_BATCH = 10;
+const MESSAGES_BATCH = 40;
 
 export async function GET(req: Request) {
   
@@ -89,16 +93,15 @@ export async function POST(req: Request) {
   
   const profile = await currentProfile();
 
-  const { content, fileUrl } = await req.json();
+  const formData = await req.formData();
   const { searchParams } = new URL(req.url);
   const groupId = searchParams.get('groupId');
-  
+
+  const file = formData.get("file") as File | string;
+  const content = formData.get("content") as string;
+
   if(!profile) {
     return new NextResponse('Unauthorized', { status: 401 });
-  }
-
-  if(!content){
-    return new NextResponse('content missing', { status: 400 });
   }
 
   if(!groupId){
@@ -132,14 +135,34 @@ export async function POST(req: Request) {
 			return new NextResponse('Member not found', { status: 404 });
 		}
 
+    let fileUrl = null;
+
+    if(file !== "null"){
+      const { secure_url } = await uploadFile(file as File) as CloudinaryResponse;
+      fileUrl = secure_url;
+    }
+
     const message = await db.message.create({
       data: {
         content,
         fileUrl,
         groupId,
         memberId: member?.id!,
+      },
+      include: {
+        member: {
+          include: {
+            profile: true
+          }
+        }
       }
     });
+
+    pusherServer.trigger(
+      toPusherKey(`group:${groupId}:messages`),
+      toPusherKey(`group:${groupId}:messages`),
+      message,
+    );
 
     return new NextResponse('ok', { status: 200 });
   } catch (error) {

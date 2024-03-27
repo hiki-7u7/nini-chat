@@ -1,15 +1,19 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 interface UseChatQueryProps {
-  groupId: string,
+  apiUrl: string,
+  query: string,
+  queryKey: string,
 };
 
 export const useChatQuery = ({
-  groupId
+  apiUrl,
+  query,
+  queryKey
 }: UseChatQueryProps) => {
 
   const fetchMessages = async ({ pageParam = undefined }) => {
-    const url = `/api/messages?groupId=${groupId}&cursor=${pageParam}`;
+    const url = `${apiUrl}?${query}&cursor=${pageParam}`;
     const res = await fetch(url);
     return res.json();
   };
@@ -21,7 +25,7 @@ export const useChatQuery = ({
     isFetchingNextPage,
     status,
   } = useInfiniteQuery({
-    queryKey: [`chat:${groupId}`],
+    queryKey: [queryKey],
     queryFn: fetchMessages,
     getNextPageParam: (lastPage) => lastPage?.nextCursor,
     refetchInterval: false,

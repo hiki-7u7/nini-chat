@@ -28,13 +28,16 @@ const GroupsLayout: FC<GroupsLayoutProps> = async ({ children }) => {
     },
     include: {
       messages: true
+    },
+    orderBy: {
+      createdAt: "asc"
     }
   })
 
   return (
     <>
-      <GroupsSidebar page="groups" groups={groups}/>
-      <div className="md:pl-[250px] h-full">
+      <GroupsSidebar groups={groups}/>
+      <div className="md:pl-[280px] h-full">
         {children}
       </div>
     </>

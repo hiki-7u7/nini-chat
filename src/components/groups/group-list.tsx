@@ -1,14 +1,15 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 
 import { GroupWithMessages } from "@/types/group";
 import { Message } from "@prisma/client";
+import { cn } from "@/lib/utils";
 
 interface GroupListProps {
-  groups: GroupWithMessages[]
+  groups: GroupWithMessages[],
 }
 
 export const GroupList: FC<GroupListProps> = ({ groups }) => {
@@ -16,6 +17,8 @@ export const GroupList: FC<GroupListProps> = ({ groups }) => {
   const [unseenMessages, setUnseenMessages] = useState<Message[]>([]);
 
   const router = useRouter();
+
+  const { groupId } = useParams();
 
   const handleNavigate = (id: string) => {
     router.push(`/groups/${id}`);
@@ -35,7 +38,7 @@ export const GroupList: FC<GroupListProps> = ({ groups }) => {
         <div
           onClick={() => handleNavigate(group.id)}
           key={group.id}
-          className="
+          className={cn(`
           hover:bg-[#333333]
             cursor-pointer
             mx-[10px]
@@ -44,8 +47,9 @@ export const GroupList: FC<GroupListProps> = ({ groups }) => {
             flex
             items-center
             justify-between
-            px-[10px]
-          "
+            px-[10px]`,
+            group.id === groupId ? "bg-[#333333]" : null
+          )}
         >
           <div className="flex gap-x-[10px] items-center">
             <div
@@ -64,8 +68,8 @@ export const GroupList: FC<GroupListProps> = ({ groups }) => {
               />
             </div>
             <p className="text-white text-sm font-medium">
-              {group.name.length > 10
-                ? group.name.substring(0,10) + '...'
+              {group.name.length > 13
+                ? group.name.substring(0,13) + '...'
                 : group.name
               }
             </p>

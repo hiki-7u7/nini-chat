@@ -9,10 +9,11 @@ import { FileUpload } from "@/components/file-upload";
 import { useModal } from "@/hooks/use-modal-store";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { Group } from "@prisma/client";
 
 
 const intialValuesState = {
-  imageUrl: '',
+  image: '',
   name: '',
   description: '',
 }
@@ -23,6 +24,7 @@ export const CreateGroupModal = ({}) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [values, setValues] = useState(intialValuesState);
+  const [file, setFile] = useState<File | null>(null);
   const router = useRouter();
 
   const isModalOpen = isOpen && type === 'createGroup';
@@ -34,17 +36,33 @@ export const CreateGroupModal = ({}) => {
     })
   };
 
-  const handleChangeFile = (fileUrl: string) => {
-    setValues({
-      ...values,
-      imageUrl: fileUrl
-    })
+  const handleChangeFile = (file: File | null) => {
+
+    const fileReader = new FileReader();
+
+    fileReader.onload = function() {
+      setValues({...values, image: fileReader.result as string });
+    };
+
+    if(file){
+      fileReader.readAsDataURL(file);
+    } else {
+      setValues({...values, image: '' });
+    }
+
+    setFile(file);
+
   };
   
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     
-    if(values.name.length === 0 || values.description.length === 0 || values.imageUrl.length === 0) return;
+    if(
+      values.name.length === 0 || 
+      values.description.length === 0 || 
+      values.image.length === 0 ||
+      !file
+    ) return;
     
     const url = '/api/groups';
     
@@ -52,9 +70,17 @@ export const CreateGroupModal = ({}) => {
   
     try {
 
-      await axios.post(url, values);
-      
+      const formData = new FormData();
+
+      formData.append('name', values.name);
+      formData.append('description', values.description);
+      formData.append('image', file);
+
+      const { data } = await axios.post<Group>(url, formData);
+
       setValues(intialValuesState);
+      handleClose();
+      router.push(`/groups/${data.id}`);
       router.refresh();
     } catch (error) {
       console.log(error);
@@ -69,7 +95,7 @@ export const CreateGroupModal = ({}) => {
     setValues((prev) => {
       return {
         ...intialValuesState,
-        imageUrl: prev.imageUrl
+        imageUrl: prev.image
       }
     })
   };
@@ -120,7 +146,12 @@ export const CreateGroupModal = ({}) => {
       
       <form onSubmit={(e) => handleSubmit(e)}>
           <div className="mt-6 flex flex-col gap-y-3">
-            <FileUpload isSubmiting={isLoading} onChange={handleChangeFile} imageValue={values.imageUrl}/>
+            
+            <FileUpload 
+              isSubmiting={isLoading} 
+              onChange={handleChangeFile} 
+              imageValue={values.image}
+            />
 
             <div className="flex flex-col gap-y-2">
               <label

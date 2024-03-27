@@ -31,7 +31,7 @@ export const GroupOverview: FC<GroupOverviewProps> = ({ group, isAdmin }) => {
   });
   const [inviteCode, setInviteCode] = useState('');
   const origin = useOrigin();
-  const { onClose } = useModal();
+  const { onClose, setData, onOpen } = useModal();
   const router = useRouter();
 
   const inviteUrl = `${origin}/invite/${inviteCode}`;
@@ -121,9 +121,9 @@ export const GroupOverview: FC<GroupOverviewProps> = ({ group, isAdmin }) => {
     const url = `/api/groups/${group.id}/invite-code`
     
     try {
-      
       const { data } = await axios.patch(url) as { data: Group};
       setInviteCode(data.inviteCode)
+      setData('group', { ...group, inviteCode: data.inviteCode })
       router.refresh();
     } catch (error) {
       console.log(error);

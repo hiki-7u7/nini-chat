@@ -11,11 +11,10 @@ import { useModal } from '@/hooks/use-modal-store';
 import { GroupWithMessages } from '@/types/group';
 
 interface GroupsSidebarProps {
-  page: 'groups';
   groups: GroupWithMessages[];
 }
 
-export const GroupsSidebar: FC<GroupsSidebarProps> = ({ page, groups }) => {
+export const GroupsSidebar: FC<GroupsSidebarProps> = ({ groups }) => {
   const [searchValue, setSearchValue] = useState('');
   const { onOpen } = useModal();
 
@@ -28,7 +27,7 @@ export const GroupsSidebar: FC<GroupsSidebarProps> = ({ page, groups }) => {
       className="
         hidden
         md:flex
-        w-[250px]
+        w-[280px]
         fixed
         bg-[#2B2B2B]
         inset-y-0
@@ -37,7 +36,7 @@ export const GroupsSidebar: FC<GroupsSidebarProps> = ({ page, groups }) => {
 				border-[#212121]
       "
     >
-      <Search page={page} onChange={onChange} value={searchValue} />
+      <Search page="groups" onChange={onChange} value={searchValue} />
 
       <div className="p-[10px] border-b-2 border-[#212121] bg-[#292929]">
         <Button

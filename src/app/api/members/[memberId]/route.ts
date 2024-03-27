@@ -1,5 +1,7 @@
 import { currentProfile } from '@/lib/current-profile';
 import { db } from '@/lib/db';
+import { pusherServer } from '@/lib/pusher';
+import { toPusherKey } from '@/lib/utils';
 import { NextResponse } from 'next/server';
 
 export async function DELETE(
@@ -21,7 +23,7 @@ export async function DELETE(
 
   try {
     
-    await db.group.update({
+    const group = await db.group.update({
       where: {
         id: groupId,
         profileId: profile.id
@@ -34,9 +36,16 @@ export async function DELETE(
               not: profile.id
             }
           }
-        }
+        },
       },
     });
+
+    /* triguer de expulsar aqui */
+    pusherServer.trigger(
+      toPusherKey(`group:${group.id}:ban_member`),
+      'ban_member',
+      { bannedMemberId: params.memberId }
+    )
 
     return new NextResponse('ok', { status: 200 });
   } catch (error) {

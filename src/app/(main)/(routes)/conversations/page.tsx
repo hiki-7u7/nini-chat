@@ -1,7 +1,15 @@
 const ConversationsPage = () => {
   return (
-    <div>
-      Your Conversations
+    <div 
+      className="
+        bg-[#2B2B2B]
+        h-full
+        flex
+        justify-center
+        items-center
+      "
+    >
+      <h3 className="text-white text-lg">Seleccione una conversación</h3>
     </div>
   );
 }

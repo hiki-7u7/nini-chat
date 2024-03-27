@@ -21,6 +21,9 @@ import {
   Plus,
   SendHorizonal,
   ServerCrash,
+  FileUp,
+  Bell,
+  MessageSquareText,
 } from 'lucide-react';
 
 export const Icons = {
@@ -46,6 +49,9 @@ export const Icons = {
   Plus,
   SendHorizonal,
   ServerCrash,
+  FileUp,
+  Bell,
+  MessageSquareText
 };
 
 export type Icon = keyof typeof Icons;

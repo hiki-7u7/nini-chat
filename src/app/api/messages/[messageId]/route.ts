@@ -1,5 +1,9 @@
+import { deleteFile } from '@/helpers/delete-file';
 import { currentProfile } from '@/lib/current-profile';
 import { db } from '@/lib/db';
+import { pusherServer } from '@/lib/pusher';
+import { toPusherKey } from '@/lib/utils';
+import { Message } from '@prisma/client';
 import { NextResponse } from 'next/server';
 
 
@@ -11,7 +15,7 @@ export async function PATCH (
   const profile = await currentProfile();
   const { searchParams } = new URL(req.url);
   const groupId = searchParams.get('groupId');
-  const { content } = await req.json();
+  const { content, fileUrl } = await req.json();
 
   if(!profile) {
     return new NextResponse('Unauthorized', { status: 401 });
@@ -68,21 +72,55 @@ export async function PATCH (
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    const modifiedMessage = await db.message.update({
-      where: {
-        id: params.messageId,
-      },
-      data: {
-        content,
-      },
-      include: {
-        member : {
-          include: {
-            profile: true,
+    let modifiedMessage:Message;
+
+    if(fileUrl === null) {
+      
+      const imageUrlSegments = message?.fileUrl!.split('/');
+      const imageId = imageUrlSegments![imageUrlSegments!?.length - 1].split('.')[0];
+      await deleteFile(`nini-chat/${imageId}`);
+
+      modifiedMessage = await db.message.update({
+        where: {
+          id: params.messageId,
+        },
+        data: {
+          fileUrl,
+        },
+        include: {
+          member : {
+            include: {
+              profile: true,
+            }
           }
         }
-      }
-    });
+      });
+
+      
+    } else {
+      modifiedMessage = await db.message.update({
+        where: {
+          id: params.messageId,
+        },
+        data: {
+          content,
+        },
+        include: {
+          member : {
+            include: {
+              profile: true,
+            }
+          }
+        }
+      });
+
+    }
+
+    pusherServer.trigger(
+      toPusherKey(`group:${group.id}:messages:update`),
+      toPusherKey(`group:${group.id}:messages:update`),
+      modifiedMessage
+    )
 
     return NextResponse.json(modifiedMessage, { status: 200 });
   } catch (error) {
@@ -158,7 +196,14 @@ export async function DELETE (
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    const deletedMessage = await db.message.update({
+    if(message.fileUrl !== null){
+      const imageUrlSegments = message?.fileUrl!.split('/');
+      const imageId = imageUrlSegments![imageUrlSegments!?.length - 1].split('.')[0];
+      await deleteFile(`nini-chat/${imageId}`);
+    }
+
+
+    const modifiedMessage = await db.message.update({
       where: {
         id: params.messageId,
       },
@@ -175,6 +220,12 @@ export async function DELETE (
         }
       }
     });
+
+    pusherServer.trigger(
+      toPusherKey(`group:${group.id}:messages:update`),
+      toPusherKey(`group:${group.id}:messages:update`),
+      modifiedMessage
+    )
 
     return new NextResponse('ok', { status: 200 });
   } catch (error) {

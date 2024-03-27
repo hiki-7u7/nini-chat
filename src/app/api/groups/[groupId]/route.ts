@@ -11,6 +11,8 @@ export async function PATCH (
   const profile = await currentProfile();
   const { description, imageUrl, name } = await req.json() as { imageUrl: string, name: string, description: string };
 
+
+
   if(!profile) {
     return new NextResponse('Unauthorized', { status: 401 });
   }
@@ -20,11 +22,11 @@ export async function PATCH (
   }
 
   if(imageUrl.length === 0){
-    return new NextResponse('description missing', { status: 400 });
+    return new NextResponse('Image missing', { status: 400 });
   }
 
   if(name.length === 0){
-    return new NextResponse('description missing', { status: 400 });
+    return new NextResponse('Name missing', { status: 400 });
   }
 
   try {

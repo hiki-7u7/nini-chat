@@ -19,3 +19,7 @@ body,
 .scrollbar-thumb::-webkit-scrollbar-thumb {
   background-color: #404040;
 }
+
+.message-break-word {
+  word-break: break-all;
+}

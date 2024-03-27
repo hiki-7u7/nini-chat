@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { currentProfile } from '@/lib/current-profile';
 import { db } from '@/lib/db';
+import { pusherServer } from '@/lib/pusher';
+import { MemberWithProfile } from '@/types/group';
+import { toPusherKey } from '@/lib/utils';
 
 export async function POST (req: Request) {
   
@@ -32,7 +35,7 @@ export async function POST (req: Request) {
       return new NextResponse('User already member', { status: 400 });
     }
 
-    await db.group.update({
+    const group = await db.group.update({
       where: {
         inviteCode: inviteCode
       },
@@ -42,8 +45,23 @@ export async function POST (req: Request) {
             { profileId: profile.id }
           ]
         }
+      },
+      include: {
+        members: {
+          include: {
+            profile: true
+          }
+        }
       }
     })
+
+    const memberToAdd = group.members.find( (member) => member.profileId = profile.id ) as MemberWithProfile;
+
+    pusherServer.trigger(
+      toPusherKey(`group:${group.id}:new_members`), 
+      'new_members',
+      {members: group.members},
+    );
 
     return new NextResponse('ok', { status: 200 });
   } catch (error) {

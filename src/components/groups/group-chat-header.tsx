@@ -41,9 +41,22 @@ export const GroupChatHeader: FC<GroupChatHeaderProps> = ({ group, members, curr
 
   return (
     <>
-      <div className="h-[70px] border-b-2 bg-[#292929] border-[#212121] flex items-center px-[10px] justify-between relative z-20">
+      <div 
+        className="
+          h-[70px] 
+          border-b-2 
+          bg-[#292929] 
+          border-[#212121] 
+          flex 
+          items-center 
+          px-[15px] 
+          justify-between 
+          relative 
+          z-20
+        "
+      >
 
-        <div className="flex items-center gap-x-[10px]">
+        <div className="flex items-center gap-x-[15px]">
           <div
             className="
               relative
@@ -59,7 +72,7 @@ export const GroupChatHeader: FC<GroupChatHeaderProps> = ({ group, members, curr
               className="rounded-full"
             />
           </div>
-          <p className="text-white">{group.name}</p>
+          <p className="text-white text-lg font-semibold">{group.name}</p>
         </div>
 
         <div className="flex text-white gap-x-[10px]">

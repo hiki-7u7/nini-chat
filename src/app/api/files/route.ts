@@ -46,7 +46,7 @@ export async function DELETE(req: Request) {
     return new NextResponse('fileId missing', { status: 400 });
   }
   try {
-    const result = await deleteFile(fileId);
+    const result = await deleteFile(`nini-chat/${fileId}`);
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
     console.log('',error);
